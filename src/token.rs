@@ -1,12 +1,11 @@
-use std::fmt;
-
 use phf::phf_map;
+use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Token {
     // Identifiers + literals
     Ident(String),
-    Int(i64),
+    Int(String),
     // Operators
     Assign,
     Plus,
@@ -69,4 +68,21 @@ impl fmt::Display for Token {
             Token::Eof => write!(f, "EOF"),
         }
     }
+}
+
+pub static KEYWORDS: phf::Map<&'static str, Token> = phf_map! {
+    "fn" => Token::Function,
+    "let" => Token::Let,
+    "true" => Token::True,
+    "false" => Token::False,
+    "if" => Token::If,
+    "else" => Token::Else,
+    "return" => Token::Return,
+};
+
+pub fn lookup_ident(ident: &str) -> Token {
+    KEYWORDS
+        .get(ident)
+        .cloned()
+        .unwrap_or_else(|| Token::Ident(ident.to_string()))
 }
