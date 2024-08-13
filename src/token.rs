@@ -1,7 +1,7 @@
 use phf::phf_map;
 use std::fmt;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash)]
 pub enum Token {
     // Identifiers + literals
     Ident(String),
