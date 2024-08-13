@@ -55,8 +55,10 @@ impl Lexer {
             None => token::Token::Eof,
             Some(ch) => {
                 if is_letter(ch) {
-                    let token = self.read_identifier();
-                    token
+                    let ident = self.read_identifier();
+                    token::lookup_ident(&ident)
+                } else if ch.is_digit(10) {
+                    token::Token::Int(ch.to_string())
                 } else {
                     token::Token::Illegal(ch)
                 }
@@ -84,7 +86,7 @@ impl Lexer {
         }
     }
 
-    fn read_identifier(&mut self) -> token::Token {
+    fn read_identifier(&mut self) -> String {
         let start = self.position;
         while let Some(ch) = self.ch {
             if is_letter(ch) {
@@ -95,8 +97,7 @@ impl Lexer {
             }
         }
         let identifier_str = self.input.get(start..self.position).unwrap();
-        let ident = String::from(identifier_str);
-        token::Token::Ident(ident)
+        String::from(identifier_str)
     }
 
     fn skip_whitespace(&mut self) {

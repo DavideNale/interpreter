@@ -70,7 +70,7 @@ impl fmt::Display for Token {
     }
 }
 
-pub static KEYWORDS: phf::Map<&'static str, Token> = phf_map! {
+static KEYWORDS: phf::Map<&'static str, Token> = phf_map! {
     "fn" => Token::Function,
     "let" => Token::Let,
     "true" => Token::True,
