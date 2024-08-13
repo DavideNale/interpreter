@@ -86,3 +86,22 @@ pub fn lookup_ident(ident: &str) -> Token {
         .cloned()
         .unwrap_or_else(|| Token::Ident(ident.to_string()))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_token_display() {
+        assert_eq!(Token::Assign.to_string(), "=");
+        assert_eq!(Token::Ident("foo".to_string()).to_string(), "foo");
+        assert_eq!(Token::Int("42".to_string()).to_string(), "42");
+        assert_eq!(Token::Illegal('?').to_string(), "Illegal(?)");
+    }
+
+    #[test]
+    fn test_lookup_ident() {
+        assert_eq!(lookup_ident("fn"), Token::Function);
+        assert_eq!(lookup_ident("foo"), Token::Ident("foo".to_string()));
+    }
+}
