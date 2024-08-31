@@ -7,6 +7,18 @@ pub struct Lexer {
     ch: Option<char>,
 }
 
+impl Iterator for Lexer {
+    type Item = token::Token;
+    fn next(&mut self) -> Option<Self::Item> {
+        let token = self.next_token();
+        if token == token::Token::Eof {
+            None
+        } else {
+            Some(token)
+        }
+    }
+}
+
 impl Lexer {
     pub fn new(input: String) -> Self {
         let mut lexer = Lexer {
