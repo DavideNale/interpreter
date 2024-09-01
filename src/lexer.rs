@@ -5,11 +5,16 @@ pub struct Lexer {
     position: usize,
     read_position: usize,
     ch: Option<char>,
+    peeked: Option<token::Token>,
 }
 
 impl Iterator for Lexer {
     type Item = token::Token;
     fn next(&mut self) -> Option<Self::Item> {
+        if let Some(next) = self.peeked.take() {
+            return Some(next);
+        }
+
         let token = self.next_token();
         if token == token::Token::Eof {
             None
@@ -26,9 +31,19 @@ impl Lexer {
             position: 0,
             read_position: 0,
             ch: None,
+            peeked: None,
         };
         lexer.read_char();
         lexer
+    }
+
+    pub fn peek(&mut self) -> Option<&token::Token> {
+        if self.peeked.is_some() {
+            return self.peeked.as_ref();
+        }
+
+        self.peeked = self.next();
+        self.peeked.as_ref()
     }
 
     pub fn next_token(&mut self) -> token::Token {
