@@ -6,6 +6,7 @@ pub enum Token {
     // Identifiers + literals
     Ident(String),
     Int(String),
+
     // Operators
     Assign,
     Plus,
@@ -17,6 +18,7 @@ pub enum Token {
     Gt,
     Eq,
     NotEq,
+
     // Delimiters
     Comma,
     Semicolon,
@@ -24,6 +26,7 @@ pub enum Token {
     RParen,
     LBrace,
     RBrace,
+
     // Keywords
     Function,
     Let,
@@ -32,6 +35,7 @@ pub enum Token {
     If,
     Else,
     Return,
+
     // Special tokens
     Illegal(char),
     Eof,

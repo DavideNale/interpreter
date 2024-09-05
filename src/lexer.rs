@@ -37,13 +37,13 @@ impl Lexer {
         lexer
     }
 
-    pub fn peek(&mut self) -> Option<&token::Token> {
+    pub fn peek(&mut self) -> Option<token::Token> {
         if self.peeked.is_some() {
-            return self.peeked.as_ref();
+            return self.peeked.clone();
         }
 
         self.peeked = self.next();
-        self.peeked.as_ref()
+        self.peeked.clone()
     }
 
     pub fn next_token(&mut self) -> token::Token {
