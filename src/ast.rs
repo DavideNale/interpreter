@@ -3,7 +3,15 @@ use std::fmt;
 use crate::token;
 
 pub struct Ast {
-    statements: Vec<Statement>,
+    pub statements: Vec<Statement>,
+}
+
+impl Ast {
+    pub fn new() -> Self {
+        Ast {
+            statements: Vec::new(),
+        }
+    }
 }
 
 impl fmt::Display for Ast {

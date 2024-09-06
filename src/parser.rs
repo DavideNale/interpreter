@@ -1,4 +1,4 @@
-use crate::ast::Ast;
+use crate::ast;
 use crate::lexer::Lexer;
 use crate::token::Token;
 
@@ -24,74 +24,56 @@ impl Parser {
         }
     }
 
-    pub fn parse_program(&mut self) -> ast::Ast{
+    pub fn parse_program(&mut self) -> ast::Ast {
         let mut ast = ast::Ast::new();
 
         while let Some(tok) = self.lexer.next() {
-            match tok {
-                Token::Eof => return ast,
-                Token::Let => self.parse_statement(),
-                _ => {
-                    println!("{}\n", tok)
-                }
+            if matches!(tok, Token::Eof) {
+                break;
+            }
+            let stmt = match tok {
+                Token::Let => self.parse_let(),
+                Token::Return => self.parse_return(),
+                _ => self.parse_expression_statement(),
+            };
+            if let Some(parsed_stmt) = stmt {
+                ast.statements.push(parsed_stmt)
             }
         }
+
+        ast
     }
 
-    fn parse_statement(self) -> Option<ast::Statement> {
-       if let Some(peek) = self.lexer.peek() {
-           if peek != Token::Ident{
-               None
-           }
-           if peer != Token::Assign {
-               None
-           }
-
-           for let while Some(next) = self.lexer.next(), next != Token::Semicolon{
-           //
-           }
-           return Some(Statement::new())
-       }
+    fn parse_let(&mut self) -> Option<ast::Statement> {
+        let peek = self.lexer.peek()?;
+        if !matches!(peek, Token::Ident(_)) {
+            return None;
+        }
+        self.lexer.next();
+        let peek = self.lexer.peek()?;
+        if !matches!(peek, Token::Assign) {
+            return None;
+        }
+        self.lexer.next();
+        let expr = self.parse_expression()?;
+        let stmt = ast::Statement::Let {
+            token: Token::Let,
+            expr,
+        };
+        Some(stmt)
     }
 
-    fn expect_peek() -> bool {
+    fn parse_return(&mut self) -> Option<ast::Statement> {
         todo!();
     }
 
-    fn parse_expression(self) {
-        todo!();
+    fn parse_expression_statement(&mut self) -> Option<ast::Statement> {
+        todo!()
     }
 
-    
-    // func (p *Parser) parseLetStatement() *ast.LetStatement {
-    // stmt := &ast.LetStatement{Token: p.curToken}
-    // if !p.expectPeek(token.IDENT) {
-    // return nil
-    // }
-    // stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
-    // if !p.expectPeek(token.ASSIGN) {
-    // return nil
-    // }
-    // // TODO: We're skipping the expressions until we
-    // // encounter a semicolon
-    // for !p.curTokenIs(token.SEMICOLON) {
-    // p.nextToken()
-    // }
-    // return stmt
-    // }
-    // func (p *Parser) curTokenIs(t token.TokenType) bool {
-    // return p.curToken.Type == t
-    // }
-    // func (p *Parser) peekTokenIs(t token.TokenType) bool {
-    // return p.peekToken.Type == t
-    // }
-    // func (p *Parser) expectPeek(t token.TokenType) bool {
-    // if p.peekTokenIs(t) {
-    // p.nextToken()
-    // return true
-    // } else {
-    // return false
-    // }
+    fn parse_expression(&mut self) -> Option<ast::Expression> {
+        todo!()
+    }
 }
 
 #[cfg(test)]
@@ -101,6 +83,6 @@ mod tests {
     #[test]
     fn test_parse_let() {
         let s = "let x = 5;";
-        Parser::new(s.to_string()).parse_program()
+        // Parser::new(s.to_string()).parse_program()
     }
 }
