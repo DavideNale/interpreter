@@ -60,11 +60,25 @@ impl Parser {
             token: Token::Let,
             expr,
         };
+        let peek = self.lexer.peek()?;
+        if matches!(peek, Token::Semicolon) {
+            self.lexer.next();
+        }
         Some(stmt)
     }
 
     fn parse_return(&mut self) -> Option<ast::Statement> {
-        todo!();
+        self.lexer.next();
+        let peek = self.lexer.peek()?;
+        let expr = self.parse_expression()?;
+        let stmt = ast::Statement::Return {
+            token: peek.clone(),
+            expr,
+        };
+        if matches!(peek, Token::Semicolon) {
+            self.lexer.next()?;
+        }
+        Some(stmt)
     }
 
     fn parse_expression_statement(&mut self) -> Option<ast::Statement> {
@@ -83,6 +97,6 @@ mod tests {
     #[test]
     fn test_parse_let() {
         let s = "let x = 5;";
-        // Parser::new(s.to_string()).parse_program()
+        Parser::new(s.to_string()).parse_program();
     }
 }
