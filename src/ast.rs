@@ -44,6 +44,7 @@ impl fmt::Display for Node {
     }
 }
 
+#[derive(Clone)]
 pub enum Statement {
     Let {
         token: token::Token,
@@ -75,6 +76,7 @@ impl fmt::Display for Statement {
     }
 }
 
+#[derive(Clone)]
 pub enum Expression {
     Identifier(String),
     Boolean(bool),

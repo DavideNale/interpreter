@@ -1,3 +1,5 @@
+use std::io::Result;
+
 use crate::token;
 
 pub struct Lexer {
@@ -44,6 +46,10 @@ impl Lexer {
 
         self.peeked = self.next();
         self.peeked.clone()
+    }
+
+    pub fn expect_peek(&mut self, expected: token::Token) -> Result<token::Token> {
+        todo!()
     }
 
     pub fn next_token(&mut self) -> token::Token {
